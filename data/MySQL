@@ -1,0 +1,16 @@
+Мои скрипты:
+<br>
+INSERT INTO `article`( `title`, `content`,  `id_user`, `id_category`) VALUES ('Тест 1','Текст первой статьи','2','3');
+$title = '0'; пременная для названия статьи.
+$content = '0'; переменная для контента.
+$id_user = '0'; переменная для айдишника автора.
+$id_category = '0'; переменная для айдишника категории.
+INSERT INTO `article`( `title`, `content`,  `id_user`, `id_category`) VALUES ('$title','$content','$id_user','$id_category');
+<br>
+SELECT title, content, name, date, title_category  FROM article INNER JOIN categories ON article.id_category = categories.id_category INNER JOIN users ON  users.id_user = article.id_user WHERE date>'2020-04-30';
+
+
+UPDATE `article` SET `title`= 'Тестовая статья 1',`id_category`='1' WHERE `id_user`= '2';
+$title_new = '1'; пременная для нового названия статьи.
+$id_user_new = ''; переменная для нового айдишника автора.
+UPDATE `article` SET `title`= '$title_new', `id_category`='$id_category_new' WHERE `id_user`= '$id_user_new';
