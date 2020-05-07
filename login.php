@@ -1,18 +1,20 @@
 <?php
 include_once('functions.php');
 
+// var_dump($_COOKIE);
 session_start();
+
 // сброс  предыдущего входа для новой авторизации, использовано при нажатии кнопки выход, для повторной авторизации.
 if(isset($_SESSION['is_auth']))
-{
+{	
 	unset($_SESSION['is_auth']);
 }
 //c чисткой кук логина и пароля путем установки их жизней на 1 января 1970 года (1)
 if(isset($_COOKIE['login'])){
-	setcookie('login', '', 1, '');
+	setcookie('login', '', time()-3600, '/');
 }
 if(isset($_COOKIE['password'])){
-	setcookie('password', '', 1, '');
+	setcookie('password', '', time()-3600, '/');
 }
 
 //парольный вход дляпользователя
@@ -38,8 +40,8 @@ if(count($_POST) > 0)
 			//затирает старый адрес для перехода, что бы при разных страницах входа на сайт не происходил переход на когда-то давно выбранную страницу, а был переход на страницу по последнему сделанному клику
 			// НЕ РАБОТАЕТ!!!!!
 			
-			header('Location:'. $_SESSION['returnUrl']);
-			unset($_SESSION['returnUrl']);
+			header('Location:'. $_SESSION['returnUrl']);	
+			unset($_SESSION['returnUrl']);		
 			exit();
 		}
 		else{

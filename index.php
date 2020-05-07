@@ -12,12 +12,11 @@ $query = db_query("SELECT id_article, title,  name, content, date, title_categor
 //создаем массив из cтатей нашего блога
 $my_articles = $query->fetchAll();
 
-
 // <!-- проверка авторизации на сессию либо куки
 // подтверждаем авторизацию с помощью сессии -->
 if($isAuth) { ?>
 	<!-- приветствие аутентифицированного пользователя  -->
-	<h4>Добро пожаловать, <?php echo $login?> !</h4>
+	<h4>Добро пожаловать, <?php echo $login;?> !</h4>
 	<!-- ссылка для выхода авторизованного пользователя -->
 	<a href="login.php"><h5>Выход</h5></a>
 	<!-- ссылка для добавления статьи авторизованным пользователем -->
@@ -35,10 +34,10 @@ if($isAuth) { ?>
 	<em><?=$message['name']?></em>         
 	<em>рубрика: </em>
 	<em><?=$message['title_category']?></em> 
-	<!-- <div><?=$message['content']?></div> -->
-	<a href="post.php?id_article=<? echo $id_article?>">ЧИТАТЬ</a>
+	<!-- <div><?=$message['content']?></div> -->	 
+	<a href="post.php?id_article=<?=$id_article;?>">ЧИТАТЬ</a>
 	<?php if($isAuth) { ?>
-		<a href="edit.php?id_article=<? echo $id_article?>">EDIT</a>
+		<a href="edit.php?id_article=<?=$id_article?>">EDIT</a>
 	<?php }  ?>        
 </div>
 <hr>

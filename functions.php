@@ -4,12 +4,10 @@ function errors($msg = null)
 {
 	//делаем статику, что бы ошибка могла сохраниться и её описание могло передаться по запросу в место вызова
 	static $last_erorr = '';
-
 	if($msg !== null)
 	{
 		$last_erorr = $msg;
-	}
-	
+	}	
 	else
 	{
 		return $last_erorr;
@@ -19,10 +17,8 @@ function errors($msg = null)
 //проверка корректности названия новой статьи
 function new_correct_title($title){
 	$title = trim($title);
-
 	if($title == '' )
-	{
-		//выхываем функцию и передаем параметром сообщение
+	{		//вызываем функцию и передаем параметром сообщение
 		errors('Заполните название!');
 		return false;
 	}
@@ -37,50 +33,14 @@ function new_correct_title($title){
 		errors('Введите корректное название !');
 		return false;
 	}
-	/*			проверка уникальности title	*/
-	elseif(file_exists("data/$title"))
-	{
-		errors('Название занято!');
-		return false;
-	}
 	else{
 		// return preg_match('/^([A-Za-z0-9_!\-\.])+$/', $title);
 		return true;
 	}	
 }
-//проверка корректности названия существующей новой статьи
-function correct_title($title){
-	$title = trim($title);
-	return preg_match('/^([а-яА-Яa-zA-ZёЁІіЇїЄєҐґ\'\d\-\s\!?;:.,-])/', $title);			
-}
 
-//проверка корректности текста статьи
-function correct_content($content){
-	if(mb_strlen($content)<100 || (!preg_match('/^([а-яА-Яa-zA-ZёЁІіЇїЄєҐґ\'\d\-\s\!?;:.,-])/', $content)))
-	{
-		errors('Не менее ста знаков  и корректный текст в контенте!');
-		return false;
-	}
-	return true;
-}
-
-//проверка корректности айдишника автора, то есть его наличие
-function correct_user($id_user){
-	//получаем массив айдишников авторов
-	$query = db_query("SELECT  name FROM users  WHERE id_user = '$id_user';");
-		//переменная имя и фамилии автора
-	$name = $query->fetchColumn();
-//если имя и фамилия в ячейке name не прописаны, значит нет такого автора, пишем ошибку
-	if ($name == "")
-	{
-		errors('Нет такого автора! Введите корректный числовой код автора!');
-		return false;
-	}
-	return true;
-}
-
-//проверка корректности имени автора статьи
-function correct_name_user($name){
+//проверка корректности имени автора статьи ли категории
+function correct_name($name){
 	if(mb_strlen($name)<2)
 	{
 		errors('Не менее двух знаков!');
@@ -92,44 +52,58 @@ function correct_name_user($name){
 	}	
 	return true;
 }
-//проверка корректности ДОБАВЛЯЕМОГO имени автора статьи
-function correct_origin_name_user($name){
-	$query = db_query("SELECT  id_user FROM users  WHERE name = '$name';");
+
+//проверка корректности названия существующей  статьи
+function correct_title($title){
+	$title = trim($title);
+	return preg_match('/^([а-яА-Яa-zA-ZёЁІіЇїЄєҐґ\'\d\-\s\!?;:.,-])/', $title);			
+}
+
+//проверка корректности контента текста статьи
+function correct_content($content){
+	if(mb_strlen($content)<100 || (!preg_match('/^([а-яА-Яa-zA-ZёЁІіЇїЄєҐґ\'\d\-\s\!?;:.,-])/', $content)))
+	{
+		errors('Не менее ста знаков  и корректный текст в контенте!');
+		return false;
+	}
+	return true;
+}
+
+//проверка наличия ДОБАВЛЯЕМОГO поля УНИВЕРСАЛЬНАЯ
+function correct_origin($id, $table, $param, $text){
+	// $query = db_query("SELECT  $id FROM $table,  WHERE $param = '$original';");
+	$query = db_query("SELECT  $id FROM $table  WHERE $param = '$text';");
 	//переменная айдишника для имени и фамилии автора
-	$id = $query->fetchColumn();	
+	$id_original = $query->fetchColumn();	
 	//если айдишник не пустой значит такой автор уже есть
-	if (!$id == "")
+	if (!$id_original == "")
 	{
 		errors('Название занято!');
 		return false;
 	}
 	return true;
 }
-//проверка корректности айдишника категории новости, то есть его наличие
-function correct_category($id_category){
+
+//УНИВЕРСАЛЬНАЯ проверка корректности получаемого айдишника сущности, то есть его наличие
+function correct_id($text, $table, $param, $id ){
 	//получаем массив айдишников категории новости
-	$query = db_query("SELECT title_category FROM categories WHERE id_category = '$id_category';");
+	$query = db_query("SELECT $text FROM $table WHERE $param = '$id';");
 //пременаая с названием категории
 	$cat = $query->fetchColumn();
 //если переданного айдишника нет, значит нет и категории(пустая),  значит пишем ошибку
 	if($cat == "")
 	{
-		errors('Нет такой категории новостей, введите числовой код категории!');
+		errors('Нерный код, введите корректный числовой код !');
 		return false;
 	}
 	return true;
 }
 
-//хеширование пароля для отправки в куку, 'salt777' это так называемая соль (для дополнительного шифрования алгоритма), которая задается от балды
-function myhash($str){
-	return hash('sha256', $str . 'salt777');
-}
-
+                       // К У К И    И     С Е С С И Я
 //функция для проверки наличия кук и сессий для авторизации
 function isAuth(){
 	//задаем флаг авторизации 
-	$isAuth = false;
-	
+	$isAuth = false;	
 	if((isset($_SESSION['is_auth']))  && ($_SESSION['is_auth']))
 	{ 
 //подтверждаем авторизацию с помощью сессии
@@ -147,18 +121,24 @@ function isAuth(){
 }
 
 //функция возвращает имя пользователя полученное из куки или сессии , которое можно использовать для приветствия после авторизации или входа
-function isName(){	
-	if($_SESSION['name'])
-	{ 
-		$login = $_SESSION['name'];	
-	}
-	else
+function isName(){		
+	if($_COOKIE['login'])
 	{
 		$login = $_COOKIE['login'];	
 	}	
+	else
+	{ 
+		$login = $_SESSION['name'];	
+	}
 	return $login;
 }
+//хеширование пароля для отправки в куку, 'salt777' это так называемая соль (для дополнительного шифрования алгоритма), которая задается от балды
+function myhash($str){
+	return hash('sha256', $str . 'salt777');
+}
 
+
+                          // Б А З А     Д А Н Н Ы Х 
 //функция для подключения соеденения  с базой данных , для постоянного подключения используем СТАТИК для пременной $db
 function db_connect(){
 	static $db;
@@ -192,3 +172,10 @@ function db_query($sql, $params = []){
 	return $query;
 }
 
+//создание статьи путем вставки запроса и массива значений для подстановки в запрос С ПОЛУЧЕНИЕМ ЗНАЧЕНИЯ ПОСЛЕДНЕГО ВВЕДЕННОГО АЙДИШНИКА
+	function db_query_add_article($sql, $params = []){		
+		db_query($sql, $params);
+		$db = db_connect();
+		return $new_article_id = $db->lastInsertId();
+
+	}

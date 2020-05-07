@@ -13,4 +13,6 @@ SELECT title, content, name, date, title_category  FROM article INNER JOIN categ
 UPDATE `article` SET `title`= 'Тестовая статья 1',`id_category`='1' WHERE `id_user`= '2';
 $title_new = '1'; пременная для нового названия статьи.
 $id_user_new = ''; переменная для нового айдишника автора.
+
 UPDATE `article` SET `title`= '$title_new', `id_category`='$id_category_new' WHERE `id_user`= '$id_user_new';
+	

@@ -5,11 +5,15 @@ session_start();
 
 //вводим переменную $isAuth  что бы знать ее значение и какждый раз не делать вызов функции isAuth() 
 $isAuth = isAuth();
+//имя пользователя из функции
+$login = isName();
+
 //проверка авторизации
 if(!$isAuth)
 {
 //ПЕРЕДАЧА ИНФОРМАЦИИ С ОДНОЙ СТРАНИЦЫ НА ДРУГУЮ ЧЕРЕЗ СЕССИЮ : в массив сессии  добавляем элемент указывающий куда перейдет клиент после авторизации в файле login.php, если он заходил после клика на "ДОБАВИТЬ автора"
-	$_SESSION['returnUrl'] = "add-user.php";
+	$_SESSION['returnUrl'] = "/add-user.php";
+		// $_SESSION['returnUrl'] = "/blog/add-user.php";
 	Header('Location: login.php');
 }
 
@@ -17,23 +21,23 @@ if(!$isAuth)
 if(count($_POST) > 0){
 	$name = trim($_POST['name']);
 //проверяем корректность вводимого названия 
-	if(!correct_name_user($name))
+	if(!correct_name($name))
 	{		
 		$msg = errors();
 	}	
-	elseif(!correct_origin_name_user($name))
-	{		
-		$msg = errors();
-	}		
-	else{
-//подключаемся к базе данных и предаем тело запроса в параметре, которое будет проверяться на ошибку с помощью этой же функции
-		$query = db_query("INSERT INTO `users`( `name`) VALUES (:n);",
-			['n'=>$name]);
-//получаем ячейку айдишника созданной   cтатьи из нашего блога
-		$query = db_query("SELECT id_user FROM users  WHERE  name = '$name';");
-		$id_user = $query->fetchColumn();
+	//проверяем незатанятость данного названия(для пользователя)
+	elseif (!correct_origin( 'id_user', 'users', 'name', $name))
+  {
+   $msg = errors();
+  }
 		
-		header("Location: /users.php?id_user=$id_user");
+	else{
+		//подключаемся к базе данных через  функцию db_query_add_article и предаем тело запроса в параметре, которое будет проверяться на ошибку с помощью этой же функции, после 
+		//добавления данных в базу функция вернет значение последнего введенного айдишника в переменную new_article_id, которую будем использовать для просмотра новой статьи при переходе на страницу post.php
+		$new_user_id = db_query_add_article("INSERT INTO `users`( `name`) VALUES (:n);",
+			['n'=>$name]);
+		header("Location: /users.php?id_user=$new_user_id");
+		// header("Location: blog/users.php?id_user=$new_user_id");
 		exit();
 	}
 }

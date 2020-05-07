@@ -10,7 +10,8 @@ $login = isName();
 if(!$isAuth)
 {
 //ПЕРЕДАЧА ИНФОРМАЦИИ С ОДНОЙ СТРАНИЦЫ НА ДРУГУЮ ЧЕРЕЗ СЕССИЮ : в массив сессии  добавляем элемент указывающий куда перейдет клиент после авторизации в файле login.php, если он заходил после клика на "ДОБАВИТЬ СТАТЬЮ"
-	$_SESSION['returnUrl'] = "add.php";
+	$_SESSION['returnUrl'] = "/add.php";
+	// $_SESSION['returnUrl'] = "/blog/add.php";
 	Header('Location: login.php');
 }
 //получение параметров с формы методом пост
@@ -19,33 +20,52 @@ if(count($_POST) > 0){
 	$content = trim($_POST['content']);
 	$id_user = trim($_POST['id_user']);
 	$id_category = trim($_POST['id_category']);
+		  //проверяем корректность вводимого айдишника СТАТЬИ
+	if(!correct_id('title', 'article', 'id_article', $id_article ))
+	{	
+		$msg = errors();
+	}	
 //проверяем корректность вводимого названия 
-	if(!new_correct_title($title))
+	elseif(!new_correct_title($title))
 	{		
 		$msg = errors();
 	}	
-	elseif(!correct_user($id_user))
-	{
-		// echo $id_user;
-		$msg = errors();
-	}	
-	elseif(!correct_category($id_category))
+	//проверка названия на незанятость вводимого названия 
+	elseif (!correct_origin('id_article', 'article', 'title', $title)) 
 	{
 		$msg = errors();
-	}	
+	}
+
+ //проверяем корректность вводимого айдишника автора
+elseif(!correct_id('name', 'users', 'id_user', $id_user ))
+{   
+  $msg = errors();
+}	
+    //проверяем корректность вводимого айдишника категории новости
+if(!correct_id('title_category', 'categories', 'id_category', $id_category ))
+{   
+  $msg = errors();
+ }
 		//проверяем корректность вводимого контента 
 	elseif(!correct_content($content))
 	{
 		$msg = errors();
 	}	
 	else{
-//подключаемся к базе данных и предаем тело запроса в параметре, которое будет проверяться на ошибку с помощью этой же функции
-		$query = db_query("INSERT INTO `article`( `title`, `content`,  `id_user`, `id_category`) VALUES ('$title','$content','$id_user','$id_category');");
-//получаем ячейку айдишника созданной   cтатьи из нашего блога
-		$query = db_query("SELECT id_article FROM article  WHERE  title = '$title';");
-		$id_article = $query->fetchColumn();
+//подключаемся к базе данных через  функцию db_query_add_article и предаем тело запроса в параметре, которое будет проверяться на ошибку с помощью этой же функции, после 
+		//добавления данных в базу функция вернет значение последнего введенного айдишника в переменную new_article_id, которую будем использовать для просмотра новой статьи при переходе на страницу post.php
+		$new_article_id = db_query_add_article("INSERT INTO `article`( `title`, `content`,  `id_user`, `id_category`) VALUES (:t,:c,:us,:cat);",
+		 [
+			't'=>$title,
+			'c'=>$content,
+			'us'=>$id_user,
+			'cat'=>$id_category
+		]);
 
-		header("Location: /post.php?id_article=$id_article ?>");
+		//header("Location: /blog/post.php?id_article=$new_article_id ");
+
+		header("Location: /post.php?id_article=$new_article_id");
+		// header("Location: /blog/post.php?id_article=$new_article_id");
 		exit();
 	}
 }
@@ -77,3 +97,12 @@ if($isAuth) { ?>
 </form>
 <?php echo $msg; ?>
 <br><a href="add-user.php">Добавить автора</a><br>
+
+
+<!-- //подключаемся к базе данных через  функцию db_query и предаем тело запроса в параметре, которое будет проверяться на ошибку с помощью этой же функции
+		// $query = db_query("INSERT INTO `article`( `title`, `content`,  `id_user`, `id_category`) VALUES (:t,:c,:us,:cat);" , [
+		// 	't'=>$title,
+		// 	'c'=>$content,
+		// 	'us'=>$id_user,
+		// 	'cat'=>$id_category
+		// ]); -->
