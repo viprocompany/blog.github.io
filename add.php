@@ -1,6 +1,7 @@
 <?php
-include_once('functions.php');
-
+include_once('m/auth.php');
+include_once('m/validate.php');
+include_once('m/db.php');
 session_start();
 //вводим переменную $isAuth  что бы знать ее значение и какждый раз не делать вызов функции isAuth() 
 $isAuth = isAuth();
@@ -14,6 +15,7 @@ if(!$isAuth)
 	// $_SESSION['returnUrl'] = "/blog/add.php";
 	Header('Location: login.php');
 }
+
 //получение параметров с формы методом пост
 if(count($_POST) > 0){
 	$title = trim($_POST['title']);
@@ -53,19 +55,10 @@ if(!correct_id('title_category', 'categories', 'id_category', $id_category ))
 	}	
 	else{
 //подключаемся к базе данных через  функцию db_query_add_article и предаем тело запроса в параметре, которое будет проверяться на ошибку с помощью этой же функции, после 
-		//добавления данных в базу функция вернет значение последнего введенного айдишника в переменную new_article_id, которую будем использовать для просмотра новой статьи при переходе на страницу post.php
-		$new_article_id = db_query_add_article("INSERT INTO `article`( `title`, `content`,  `id_user`, `id_category`) VALUES (:t,:c,:us,:cat);",
-		 [
-			't'=>$title,
-			'c'=>$content,
-			'us'=>$id_user,
-			'cat'=>$id_category
-		]);
-
-		//header("Location: /blog/post.php?id_article=$new_article_id ");
-
+//добавление данных в базу функция вернет значение последнего введенного айдишника в переменную new_article_id, которую будем использовать для просмотра новой статьи при переходе на страницу post.php
+		$new_article_id = db_query_add_article($title,$content, $id_user, $id_category);	
 		header("Location: /post.php?id_article=$new_article_id");
-		// header("Location: /blog/post.php?id_article=$new_article_id");
+		//header("Location: /blog/post.php?id_article=$new_article_id");
 		exit();
 	}
 }
@@ -77,32 +70,5 @@ else{
 	$content = "";
 	$msg = '';
 }
-
-if($isAuth) { ?>
-	<!-- приветствие аутентифицированного пользователя  -->
-	<h4>Добро пожаловать, <?php echo $login?> !</h4>
-<?php } ?>
-<a href="index.php">На главную</a><br>
-<h3>ДОБАВИТЬ СТАТЬЮ</h3>
-<form method="post">
-	Название<br>
-	<input type="text" name="title" value="<?php  echo $title; ?>"><br>
-	Код автора<br>
-	<input type="text" name="id_user" value="<?php  echo $id_user; ?>"><br>
-	Код категории<br>
-	<input type="text" name="id_category" value="<?php  echo $id_category; ?>"><br>
-	Контент<br>
-	<textarea name="content"><?php echo $content; ?></textarea><br>
-	<input type="submit" value="Добавить">
-</form>
-<?php echo $msg; ?>
-<br><a href="add-user.php">Добавить автора</a><br>
-
-
-<!-- //подключаемся к базе данных через  функцию db_query и предаем тело запроса в параметре, которое будет проверяться на ошибку с помощью этой же функции
-		// $query = db_query("INSERT INTO `article`( `title`, `content`,  `id_user`, `id_category`) VALUES (:t,:c,:us,:cat);" , [
-		// 	't'=>$title,
-		// 	'c'=>$content,
-		// 	'us'=>$id_user,
-		// 	'cat'=>$id_category
-		// ]); -->
+include('v/v_add.php');
+?>

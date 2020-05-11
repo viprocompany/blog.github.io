@@ -1,9 +1,9 @@
 <?php
-include_once('functions.php');
-
+include_once('m/auth.php');
+// include_once('m/validate.php');
+// include_once('m/db.php');
 // var_dump($_COOKIE);
 session_start();
-
 // сброс  предыдущего входа для новой авторизации, использовано при нажатии кнопки выход, для повторной авторизации.
 if(isset($_SESSION['is_auth']))
 {	
@@ -16,13 +16,11 @@ if(isset($_COOKIE['login'])){
 if(isset($_COOKIE['password'])){
 	setcookie('password', '', time()-3600, '/');
 }
-
 //парольный вход дляпользователя
 if(count($_POST) > 0)
 {
 	$_SESSION['name'] = $_POST['login'];
 	// echo $_SESSION['name'] можно использовать на всех страницах сайта и обращаться к нему как к имени авторизованного пользователя
-
 	if($_POST['login'] == 'admin' && $_POST['password'] == 'admin')
 	{
 	//задаем значение авторизации как действительное
@@ -33,7 +31,6 @@ if(count($_POST) > 0)
 			setcookie('login', 'admin', time()+3600*24*365 , '/');
 			setcookie('password', myhash('admin'), time()+3600*24*365 , '/');
 		}
-
 	//!!!!!!!!ПЕРЕДАЧА ИНФОРМАЦИИ С ОДНОЙ СТРАНИЦЫ НА ДРУГУЮ ЧЕРЕЗ СЕССИЮ : элемент $_SESSION['returnUrl'] указывающий куда пойдет клиент  после авторизации в файле login.php. НАПРИМЕР: если файл login.php открылся после клика по edit(изменению)  то клиент пойдет на edit.php выбранной статьи, так как на edit.php элемент задан как $_SESSION['returnUrl'] = 'edit.php?fname=$fname' .  соответственно добавление  и так далее !!!!!
 		if(isset($_SESSION['returnUrl']))
 		{
@@ -47,16 +44,9 @@ if(count($_POST) > 0)
 		else{
 			header('Location: index.php');
 			exit();
-		}
-		
+		}		
 	}
 }
-?>
-<a href="index.php">На главную</a><br><br>
-<form method="post">
-	ВХОД<br>
-	Логин	<input type="text" name="login" value=""><br>
-	Пароль<input type="password" name="password" value=""><br>
-	<input type="checkbox" name="remember" value="">Запомнить<br>	
-	<input type="submit" value="Войти">
-</form>
+include('v/v_login.php');
+
+
