@@ -1,8 +1,4 @@
 <p><a href="index.php?view=base">Отобразить нормально</a><span>...</span><a href="index.php?view=inline">Отобразить в линию</a></p>
-<?php 
-if(!$isAuth){?>
-<p><a href="login.php">Войти</a></p>
-<?php }?>
 <?php  foreach($my_articles as $message)  {  $id_article = $message['id_article'];  ?>
 <div>	
 	<strong><?=$message['title']?></strong>

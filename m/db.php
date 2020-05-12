@@ -13,7 +13,7 @@ function db_connect(){
 //проверка запроса на ошибки в теле запроса, используем константу безошибочности PDO::ERR_NONE, которая равна 00000, и будет сравниваться с массивом по разбору возможных ошибок. константу вместо её значения 00000 используем потому, что с обновлением версии PHP её значение может измениться на другое.
 function db_check_error($query){
 	$info = $query->errorInfo();
-	//если данные из массива возможных ошибок не равны константе PDO::ERR_NONE, то есть при наличии ошибки скрипт прекращает свою работу
+//если данные из массива возможных ошибок не равны константе PDO::ERR_NONE, то есть при наличии ошибки скрипт прекращает свою работу
 	if($info[0] != PDO::ERR_NONE){
 		exit($info[2]);
 	}
@@ -27,12 +27,41 @@ function db_query($sql, $params = []){
 	$query = $db->prepare($sql);
 //готовый выполненный запрос с параметрами , который можно впоследствии выводить для SELECT с помощью fetch , fetchAll
 	$query->execute($params);
-	//проверка тела запроса на ошибки с помощью функции db_check_error
+//проверка тела запроса на ошибки с помощью функции db_check_error
 	db_check_error($query);
 	return $query;
 }
 
-	//создание статьи путем вставки запроса и массива значений для подстановки в запрос С ПОЛУЧЕНИЕМ ЗНАЧЕНИЯ ПОСЛЕДНЕГО ВВЕДЕННОГО АЙДИШНИКА СТАТЬИ
+//проверка наличия ДОБАВЛЯЕМОГO поля УНИВЕРСАЛЬНАЯ
+function correct_origin($id, $table, $param, $text){
+	$query = db_query("SELECT  $id FROM $table  WHERE $param = '$text';");
+	//переменная айдишника для имени и фамилии автора
+	$id_original = $query->fetchColumn();	
+	//если айдишник не пустой значит такой автор уже есть
+	if (!$id_original == "")
+	{
+		errors('Название занято!');
+		return false;
+	}
+	return true;
+}
+
+//УНИВЕРСАЛЬНАЯ проверка корректности получаемого айдишника сущности, то есть его наличие
+function correct_id($text, $table, $param, $id ){
+	//получаем массив айдишников категории новости
+	$query = db_query("SELECT $text FROM $table WHERE $param = '$id';");
+//пременаая с названием категории
+	$cat = $query->fetchColumn();
+//если переданного айдишника нет, значит нет и категории(пустая),  значит пишем ошибку
+	if($cat == "")
+	{
+		errors('Нерный код, введите корректный числовой код !');
+		return false;
+	}
+	return true;
+}
+
+//создание статьи путем вставки запроса и массива значений для подстановки в запрос С ПОЛУЧЕНИЕМ ЗНАЧЕНИЯ ПОСЛЕДНЕГО ВВЕДЕННОГО АЙДИШНИКА СТАТЬИ
 	function db_query_add_article($title, $content, $id_user, $id_category){
 //подготовка запроса
 		db_query("INSERT INTO `article` (`title`, `content`,  `id_user`,`id_category`)  VALUES (:t,:c,:us,:cat)", [
@@ -45,14 +74,14 @@ function db_query($sql, $params = []){
 		return $new_article_id = $db->lastInsertId();
 	}
 
-	//создание статьи путем вставки запроса и массива значений для подстановки в запрос С ПОЛУЧЕНИЕМ ЗНАЧЕНИЯ ПОСЛЕДНЕГО ВВЕДЕННОГО АЙДИШНИКА
+//создание статьи путем вставки запроса и массива значений для подстановки в запрос С ПОЛУЧЕНИЕМ ЗНАЧЕНИЯ ПОСЛЕДНЕГО ВВЕДЕННОГО АЙДИШНИКА
 	function db_query_add($sql, $params = []){		
 		db_query($sql, $params);
 		$db = db_connect();
 		return $new_article_id = $db->lastInsertId();
 	}
 
-		//ОБНОВЛЕНИЕ статьи путем вставки запроса и массива значений для подстановки в запрос по выбранному  АЙДИШНИКУ
+//ОБНОВЛЕНИЕ статьи путем вставки запроса и массива значений для подстановки в запрос по выбранному  АЙДИШНИКУ
 	function db_query_update_art($title, $content, $id_user, $id_category, $id_article){		
 		$query = db_query("UPDATE `article` SET  `title`=:t, `content`=:c,   `id_user`=:us, `id_category`=:cat  WHERE id_article= :new  ",[
 			't'=>$title,
@@ -65,12 +94,13 @@ function db_query($sql, $params = []){
 	 return $query;
 	}
 
-	//функция для выборки данных изтрех таблиц одновременно
+//функция для выборки данных изтрех таблиц одновременно
 	function select_tables_all($parametrs, $where="", $order=""){
 		$query = db_query("SELECT $parametrs  FROM article INNER JOIN categories ON article.id_category = categories.id_category INNER JOIN users ON  users.id_user = article.id_user  $where  $order;");
 		return $query;
 	}
-		//функция для выборки данных из ОДНОЙ  таблицы 
+
+//функция для выборки данных из ОДНОЙ  таблицы 
 	function select_table($parametrs, $table, $other=""){
 		$query = db_query("SELECT $parametrs  FROM $table  $other ;");
 		return $query;

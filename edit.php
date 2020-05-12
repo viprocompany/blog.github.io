@@ -6,12 +6,7 @@ session_start();
 //проверка авторизации
 $isAuth = isAuth();
 //вводим переменную $isAuth  что бы знать ее значение и какждый раз не делать вызов функции isAuth() 
-if(!$isAuth)
-{//ПЕРЕДАЧА ИНФОРМАЦИИ С ОДНОЙ СТРАНИЦЫ НА ДРУГУЮ ЧЕРЕЗ СЕССИЮ : в массив сессии  добавляем элемент указывающий куда перейдет клиент после авторизации в файле login.php, если он заходил после клика на "ДОБАВИТЬ автора"
-  // $_SESSION['returnUrl'] = "/blog/edit-user.php?id_user=$id_user";
-$_SESSION['returnUrl'] = "/edit.php?id_article=$id_article";
-Header('Location: login.php');
-}
+
 if($isAuth)
 {	//имя пользователя для вывода в приветствии
 	$login = isName();
@@ -21,6 +16,12 @@ if($isAuth)
 // из адресной строки берем get-параметр id_article и принимаем его как значение названия статьи выведенной для изменения
 global $id_article;
 $id_article = $_GET['id_article'];
+if(!$isAuth)
+{//ПЕРЕДАЧА ИНФОРМАЦИИ С ОДНОЙ СТРАНИЦЫ НА ДРУГУЮ ЧЕРЕЗ СЕССИЮ : в массив сессии  добавляем элемент указывающий куда перейдет клиент после авторизации в файле login.php, если он заходил после клика на "ДОБАВИТЬ автора"
+  // $_SESSION['returnUrl'] = "/blog/edit-user.php?id_user=$id_user";
+$_SESSION['returnUrl'] = "/edit.php?id_article=$id_article";
+Header('Location: login.php');
+}
 $err404 = false;
 if(!$id_article)
 {

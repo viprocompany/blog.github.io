@@ -5,10 +5,16 @@ include_once('m/db.php');
 session_start();
 //вводим переменную $isAuth  что бы знать ее значение и какждый раз не делать вызов функции isAuth() 
 $isAuth = isAuth();
+if(!$isAuth)
+{
+//ПЕРЕДАЧА ИНФОРМАЦИИ С ОДНОЙ СТРАНИЦЫ НА ДРУГУЮ ЧЕРЕЗ СЕССИЮ : в массив сессии  добавляем элемент указывающий куда перейдет клиент после авторизации в файле login.php, если он заходил после клика на "ДОБАВИТЬ автора"
+	$_SESSION['returnUrl'] = "/index.php";
+		// $_SESSION['returnUrl'] = "/blog/index.php";
+	// Header('Location: login.php');
+}
 //имя пользователя для вывода в приветствии
 $login = isName();
 //подключаемся к базе данных и предаем составляющие тело запроса в параметре, которое будет проверяться на ошибку с помощью этой же функции
-// include_once('m/db.php');
 $query = select_tables_all('id_article, title,  name, content, date, title_category','WHERE date>\'2020-04-30\'','ORDER BY date DESC');
 //создаем массив из cтатей нашего блога
 $my_articles = $query->fetchAll();

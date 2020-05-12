@@ -20,6 +20,22 @@ function isAuth(){
 	return $isAuth;
 }
 
+// сброс  предыдущего входа для новой авторизации, использовано при нажатии кнопки выход, для повторной авторизации.
+function notAuth(){
+	if(isset($_SESSION['is_auth']))
+{	
+	unset($_SESSION['is_auth']);
+}
+//c чисткой кук логина и пароля путем установки их жизней на 1 января 1970 года (1)
+if(isset($_COOKIE['login'])){
+	setcookie('login', '', time()-3600, '/');
+}
+if(isset($_COOKIE['password'])){
+	setcookie('password', '', time()-3600, '/');
+}
+return $notAuth;
+}
+
 //функция возвращает имя пользователя полученное из куки или сессии , которое можно использовать для приветствия после авторизации или входа
 function isName(){		
 	if($_COOKIE['login'])
@@ -36,3 +52,4 @@ function isName(){
 function myhash($str){
 	return hash('sha256', $str . 'salt777');
 }
+

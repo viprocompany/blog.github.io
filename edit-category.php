@@ -7,6 +7,12 @@ session_start();
 $isAuth = isAuth();
 //имя пользователя для вывода в приветствии
   $login = isName();
+
+// получение данных на форму для изменения 
+// из адресной строки берем getпараметр id_article и принимаем его как значение названия статьи выведенной для изменения
+$msg = '';
+global $id_category;
+$id_category = $_GET['id_category'];
 //проверка авторизации
 if(!$isAuth)
 {
@@ -15,11 +21,6 @@ if(!$isAuth)
   $_SESSION['returnUrl'] = "/edit-category.php?id_category=$id_category";
   Header('Location: login.php');
 }
-// получение данных на форму для изменения 
-// из адресной строки берем getпараметр id_article и принимаем его как значение названия статьи выведенной для изменения
-$msg = '';
-global $id_category;
-$id_category = $_GET['id_category'];
 $err404 = false;
 if(!$id_category)
 {  
