@@ -2,6 +2,7 @@
 include_once('m/auth.php');
 include_once('m/validate.php');
 include_once('m/db.php');
+include_once('m/system.php');
 session_start();
 //проверка авторизации
 $isAuth = isAuth();
@@ -72,20 +73,18 @@ if((count($_POST) > 0) )
 	{		
 		$msg = errors();
 	}	
-	elseif($title_new == $title)
-	{		
-		$msg = 'Название менять нельзя';
-	}	
-// 	elseif (!correct_origin_title_article($title_new))
-// {
-// 	$msg = errors();
-// }
-    //проверяем корректность вводимого айдишника
+	// elseif($title_new !
+	// 	= $title)
+	// {		
+	// 	$msg = 'Название менять нельзя';
+	// }	
+
+    //проверяем корректность вводимого айдишника автора
 	elseif(!correct_id('name', 'users', 'id_user', $id_user_new ))
 	{   
 		$msg = errors();
 	}	
-  //проверяем корректность вводимого айдишника
+  //проверяем корректность вводимого айдишника категории новости
 	elseif(!correct_id('title_category', 'categories', 'id_category', $id_category_new ))
 	{   
 		$msg = errors();
@@ -105,7 +104,27 @@ if((count($_POST) > 0) )
 }
 if(!$err404)
 {
-	include('v/v_edit.php');
+	 $inner_auth =  template('v_auth' , [
+ 	'isAuth' => $isAuth,
+ 	'login' => $login,
+ 	 'msg' => $msg
+ ]);
+	// include('v/v_edit.php');
+	 $inner_edit = template('v_edit' , [
+ 	'isAuth' => $isAuth,
+ 	'id_article' => $id_article,
+ 	'title' => $title,
+ 	'id_user' => $id_user,
+ 	'id_category' => $id_category,
+ 	'content' => $content,
+ 	'msg' => $msg
+ ]);
+	 echo template('v_main', [
+'title'=> 'Изменить статью',
+'content'=> $inner_edit,
+'auth'=> $inner_auth
+]);
+
 }
 
 ?>

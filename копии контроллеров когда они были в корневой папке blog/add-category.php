@@ -2,6 +2,7 @@
 include_once('m/auth.php');
 include_once('m/validate.php');
 include_once('m/db.php');
+include_once('m/system.php');
 session_start();
 //вводим переменную $isAuth  что бы знать ее значение и какждый раз не делать вызов функции isAuth() 
 $isAuth = isAuth();
@@ -45,6 +46,22 @@ else{
   $title_category = "";
   $msg = '';
 }
-include_once('v/v_add-category.php');
+// include_once('v/v_add-category.php');
+  $inner_auth =  template('v_auth' , [
+        'isAuth' => $isAuth,
+        'login' => $login,
+        'msg' => $msg
+      ]); 
+  // include('v/v_users.php');
+        $inner_category_add = template('v_add-category',  [
+          'isAuth' => $isAuth ,
+          'title_category' => $title_category,
+          'msg' => $msg
+      ]);
+        echo template('v_main', [
+        'title'=> 'НОВАЯ КАТЕГОРИЯ',
+        'content'=> $inner_category_add,
+        'auth'=> $inner_auth
+      ]); 
 
 ?>

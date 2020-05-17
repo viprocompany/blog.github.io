@@ -6,7 +6,9 @@
 		<span>ФИО: <strong><?=$user['name']?></strong></span> 
 		<span>порядковый нормер: </span><strong> <?=$user['id_user']?></strong>
 		<?php if($isAuth) { ?>
-			<a href="edit-user.php?id_user=<?=$id_user?>">EDIT</a>
+				<!-- старые ссылки до приведение к человекочитаемым урлам ЧПУ -->
+		<!-- 		<a class="btn btn-outline-warning" href="index.php?c=edit-user&id_user=<?=$id_user?>">Изменить</a> -->
+				<a class="btn btn-outline-warning" href="<?php echo ROOT?>edit-user/<?=$id_user?>">Изменить</a>
 		<?php }  ?>    
 		<hr>
 	<?php	}

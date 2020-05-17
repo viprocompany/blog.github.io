@@ -1,10 +1,7 @@
-<p><a href="index.php">Главная</a><span>...</span><a href="users.php">Авторы  </a><span>...</span>
-<a href="categories.php">  Категории новостей</a>
-</p>
 <form method="post">
-	ВХОД<br>
+	ВХОД<hr>
 	Логин	<input type="text" name="login" value=""><br>
 	Пароль<input type="password" name="password" value=""><br>
 	<input type="checkbox" name="remember" value="">Запомнить меня<br>	
-	<input type="submit" value="Войти">
+	<input type="submit" class="btn btn-success" value="Войти">
 </form>

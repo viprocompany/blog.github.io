@@ -2,6 +2,7 @@
 include_once('m/auth.php');
 include_once('m/validate.php');
 include_once('m/db.php');
+include_once('m/system.php');
 session_start();
 //вводим переменную $isAuth  что бы знать ее значение и какждый раз не делать вызов функции isAuth() 
 $isAuth = isAuth();
@@ -87,7 +88,24 @@ if(count($_POST) > 0 ){
   }
 }
 if(!$err404){
- include('v/v_edit-category.php'); 
+
+   $inner_auth =  template('v_auth' , [
+  'isAuth' => $isAuth,
+  'login' => $login,
+   'msg' => $msg
+ ]);
+   // include('v/v_edit-category.php'); 
+   $inner_edit_category = template('v_edit-category' , [
+  'isAuth' => $isAuth,
+  'id_category' => $id_category,
+  'title_category' => $title_category,
+  'msg' => $msg
+ ]);
+   echo template('v_main', [
+'title'=> 'Изменить категорию',
+'content'=> $inner_edit_category,
+'auth'=> $inner_auth
+]);
 }
 else{
  echo $msg;

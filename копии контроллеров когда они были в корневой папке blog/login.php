@@ -1,5 +1,6 @@
 <?php
 include_once('m/auth.php');
+include_once('m/system.php');
 // include_once('m/validate.php');
 // include_once('m/db.php');
 // var_dump($_COOKIE);
@@ -37,6 +38,11 @@ if(count($_POST) > 0)
 		}		
 	}
 }
-include('v/v_login.php');
+// include('v/v_login.php');
+	$inner_login = template('v_login');
 
+	echo template('v_main', [
+				'title'=> 'ВХОД',
+				'content'=> $inner_login
+			]);
 

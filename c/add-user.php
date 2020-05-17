@@ -1,8 +1,5 @@
 <?php
-include_once('m/auth.php');
-include_once('m/validate.php');
-include_once('m/db.php');
-session_start();
+
 //вводим переменную $isAuth  что бы знать ее значение и какждый раз не делать вызов функции isAuth() 
 $isAuth = isAuth();
 //имя пользователя из функции
@@ -11,9 +8,9 @@ $login = isName();
 if(!$isAuth)
 {
 //ПЕРЕДАЧА ИНФОРМАЦИИ С ОДНОЙ СТРАНИЦЫ НА ДРУГУЮ ЧЕРЕЗ СЕССИЮ : в массив сессии  добавляем элемент указывающий куда перейдет клиент после авторизации в файле login.php, если он заходил после клика на "ДОБАВИТЬ автора"
-	$_SESSION['returnUrl'] = "/add-user.php";
+	$_SESSION['returnUrl'] = "/index.php?c=add-user";
 		// $_SESSION['returnUrl'] = "/blog/add-user.php";
-	Header('Location: login.php');
+	Header('Location: index.php?c=login');
 }
 
 //получение параметров с формы методом пост
@@ -34,9 +31,11 @@ if(count($_POST) > 0){
 		//добавления данных в базу функция вернет значение последнего введенного айдишника в переменную new_article_id, которую будем использовать для просмотра новой статьи при переходе на страницу post.php
 		$new_user_id = db_query_add("INSERT INTO `users`( `name`) VALUES (:n);",
 			['n'=>$name]);
-		header("Location: /users.php?id_user=$new_user_id");
 		// header("Location: blog/users.php?id_user=$new_user_id");
-		exit();
+			// старые ссылки до приведение к человекочитаемым урлам ЧПУ 
+		// header("Location: /index.php?c=users&id_user=$new_user_id");
+		header("Location: " . ROOT . "users/$new_user_id");
+				exit();
 	}
 }
 else{
@@ -44,6 +43,13 @@ else{
 	$name = "";
 	$msg = '';
 }
+	// include('v/v_users.php');
+				$inner = template('v_add-user',  [
+					'isAuth' => $isAuth	,
+				  'name' => $name,
+				  'msg' => $msg
+			]);
+				$title = 'НОВЫЙ АВТОР';
+	
 
-include_once('v/v_add-user.php');
 ?>

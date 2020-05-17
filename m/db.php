@@ -62,13 +62,14 @@ function correct_id($text, $table, $param, $id ){
 }
 
 //создание статьи путем вставки запроса и массива значений для подстановки в запрос С ПОЛУЧЕНИЕМ ЗНАЧЕНИЯ ПОСЛЕДНЕГО ВВЕДЕННОГО АЙДИШНИКА СТАТЬИ
-	function db_query_add_article($title, $content, $id_user, $id_category){
+	function db_query_add_article($title, $content, $id_user, $id_category, $img){
 //подготовка запроса
-		db_query("INSERT INTO `article` (`title`, `content`,  `id_user`,`id_category`)  VALUES (:t,:c,:us,:cat)", [
+		db_query("INSERT INTO `article` (`title`, `content`,  `id_user`,`id_category`, `img`)  VALUES (:t,:c,:us,:cat, :i)", [
 			't'=>$title,
 			'c'=>$content,
 			'us'=>$id_user,
-			'cat'=>$id_category
+			'cat'=>$id_category,
+			'i'=>$img
 		]);
 		$db = db_connect();
 		return $new_article_id = $db->lastInsertId();
@@ -82,13 +83,14 @@ function correct_id($text, $table, $param, $id ){
 	}
 
 //ОБНОВЛЕНИЕ статьи путем вставки запроса и массива значений для подстановки в запрос по выбранному  АЙДИШНИКУ
-	function db_query_update_art($title, $content, $id_user, $id_category, $id_article){		
-		$query = db_query("UPDATE `article` SET  `title`=:t, `content`=:c,   `id_user`=:us, `id_category`=:cat  WHERE id_article= :new  ",[
+	function db_query_update_art($title, $content, $id_user, $id_category, $id_article, $img){		
+		$query = db_query("UPDATE `article` SET  `title`=:t, `content`=:c,   `id_user`=:us, `id_category`=:cat , `img`=:i  WHERE id_article= :new  ",[
 			't'=>$title,
 			'c'=>$content,
 			'us'=>$id_user,
 			'cat'=>$id_category,
-			'new'=>$id_article
+			'new'=>$id_article,
+			'i'=>$img
 		]
 	);		
 	 return $query;

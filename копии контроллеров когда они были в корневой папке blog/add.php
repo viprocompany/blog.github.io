@@ -2,6 +2,7 @@
 include_once('m/auth.php');
 include_once('m/validate.php');
 include_once('m/db.php');
+include_once('m/system.php');
 session_start();
 //вводим переменную $isAuth  что бы знать ее значение и какждый раз не делать вызов функции isAuth() 
 $isAuth = isAuth();
@@ -22,38 +23,38 @@ if(count($_POST) > 0){
 	$content = trim($_POST['content']);
 	$id_user = trim($_POST['id_user']);
 	$id_category = trim($_POST['id_category']);
-		  //проверяем корректность вводимого айдишника СТАТЬИ
-	if(!correct_id('title', 'article', 'id_article', $id_article ))
-	{	
-		$msg = errors();
-	}	
+		  //НЕ НУЖНО проверяем корректность вводимого айдишника СТАТЬИ
+	// if(!correct_id('title', 'article', 'id_article', $id_article ))
+	// {	
+	// 	$msg = 'Нерный код статьи';
+	// }	
 //проверяем корректность вводимого названия 
-	elseif(!new_correct_title($title))
+	if(!new_correct_title($title))
 	{		
 		$msg = errors();
 	}	
-	//проверка названия на незанятость вводимого названия 
+	// проверка названия на незанятость вводимого названия 
 	elseif (!correct_origin('id_article', 'article', 'title', $title)) 
 	{
 		$msg = errors();
 	}
-
  //проверяем корректность вводимого айдишника автора
-elseif(!correct_id('name', 'users', 'id_user', $id_user ))
-{   
-  $msg = errors();
-}	
-    //проверяем корректность вводимого айдишника категории новости
-if(!correct_id('title_category', 'categories', 'id_category', $id_category ))
-{   
-  $msg = errors();
- }
-		//проверяем корректность вводимого контента 
+	elseif(!correct_id('name', 'users', 'id_user', $id_user ))
+	{   
+		$msg = 'Неверный код автора';
+	}	
+//проверяем корректность вводимого айдишника категории новости
+	elseif(!correct_id('title_category', 'categories', 'id_category', $id_category ))
+	{   
+		$msg = 'Неверный код категории новости';
+	}
+//проверяем корректность вводимого контента 
 	elseif(!correct_content($content))
 	{
 		$msg = errors();
 	}	
-	else{
+	else
+	{
 //подключаемся к базе данных через  функцию db_query_add_article и предаем тело запроса в параметре, которое будет проверяться на ошибку с помощью этой же функции, после 
 //добавление данных в базу функция вернет значение последнего введенного айдишника в переменную new_article_id, которую будем использовать для просмотра новой статьи при переходе на страницу post.php
 		$new_article_id = db_query_add_article($title,$content, $id_user, $id_category);	
@@ -70,5 +71,34 @@ else{
 	$content = "";
 	$msg = '';
 }
-include('v/v_add.php');
+
+ 
+// if(!$isAuth){
+// // <p><a href="login.php">Войти</a></p>
+// } 
+
+// include('v/v_auth.php');
+ $inner_auth =  template('v_auth' , [
+ 	'isAuth' => $isAuth,
+ 	'login' => $login,
+ 	 'msg' => $msg
+ ]);
+  // include('v/v_add.php'); 
+ $inner_add = template('v_add' , [
+ 	'isAuth' => $isAuth,
+ 	'title' => $title,
+ 	'id_user' => $id_user,
+ 	'id_category' => $id_category,
+ 	'content' => $content,
+ 	'msg' => $msg
+ ]);
+
+echo template('v_main', [
+'title'=> 'Добавить статью',
+'content'=> $inner_add,
+'auth'=> $inner_auth
+]);
+ 
+
+
 ?>

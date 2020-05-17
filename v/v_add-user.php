@@ -1,12 +1,10 @@
 <?php if($isAuth) { ?>
-	<!-- приветствие аутентифицированного пользователя  -->
-	<h4>Добро пожаловать, <?php echo $login?> !</h4>
-	<a href="index.php">На главную</a><br>
 	<h3>ДОБАВИТЬ АВТОРА</h3>
+	<hr>
 	<form method="post">
 		ФИО  автора<br>
 		<input type="text" name="name" value="<?php  echo $name; ?>"><br>
-		<input type="submit" value="Добавить">
-	</form>
-	<?php echo $msg; ?>
-<?php }
+		<input class="btn btn-success" type="submit" value="Добавить">
+	</form>	
+<?php }?>
+<p><?php echo $msg; ?></p>

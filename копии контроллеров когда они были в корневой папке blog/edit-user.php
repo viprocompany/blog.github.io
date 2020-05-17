@@ -2,6 +2,7 @@
 include_once('m/auth.php');
 include_once('m/validate.php');
 include_once('m/db.php');
+include_once('m/system.php');
 session_start();
 //проверка авторизации
 //вводим переменную $isAuth  что бы знать ее значение и какждый раз не делать вызов функции isAuth() 
@@ -90,8 +91,25 @@ if(count($_POST) > 0 ){
   }
 }
 if(!$err404)
-{
-  include('v/v_edit-user.php');
+{ 
+   $inner_auth =  template('v_auth' , [
+  'isAuth' => $isAuth,
+  'login' => $login,
+   'msg' => $msg
+ ]);
+   // include('v/v_edit-user.php');
+   $inner_edit_user = template('v_edit-user' , [
+  'isAuth' => $isAuth,
+  'id_user' => $id_user,
+  'name' => $name,
+  'msg' => $msg
+ ]);
+   echo template('v_main', [
+'title'=> 'Изменить автора',
+'content'=> $inner_edit_user,
+'auth'=> $inner_auth
+]);
+
 }
 else{
  echo $msg;
