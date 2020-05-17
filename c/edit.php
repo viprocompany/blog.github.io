@@ -31,25 +31,22 @@ if(!$id_article)
 else{
 
 //создаем соеденение с базой, делаем запрос на выбор статьи по пререданному с индексной строки айдишнику, попутно в этой же функции проверяем коррктность тела запроса		
-	$query = select_table(' * ', ' article ', " WHERE  id_article = '$id_article'");
+	// $query = select_table(' * ', ' article ', " WHERE  id_article = '$id_article'");
+	 $query = select_tables_all('*' , " WHERE  id_article = '$id_article'");
 //создаем массив из cтатей нашего блога
 	$my_article = $query->fetchAll();
-  // var_dump(	$my_article);
-	if(!$my_article){
+  	if(!$my_article){
 		$err404 = true;
-		// $msg = 'В наличии нет такой страницы!';
-		// $error = template('v_error',  [
-		// 		'msg' => $msg
-		// 	]);
 	}	
 	else
 	{//проходим циклом по массиву чтоб достать нужные нам поля таблицы
 		foreach($my_article as $art)  
 		{ 
-			$title = $art['title'];
-			$id_category = $art['id_category'];
+			$title = $art['title'];			
 			$id_user = $art['id_user'];
 			$name= $art['name'];
+			$id_category = $art['id_category'];
+			$title_category = $art['title_category'];
 			$content = $art['content'];	
 			$img = $art['img'];	
 // функция correct_title для проверки корректоности названия статьи из файла functions.php
@@ -99,7 +96,6 @@ if((count($_POST) > 0) )
 	// {		
 	// 	$msg = 'Название менять нельзя';
 	// }	
-
     //проверяем корректность вводимого айдишника автора
 	elseif(!correct_id('name', 'users', 'id_user', $id_user_new ))
 	{   
@@ -139,12 +135,14 @@ if(!$err404)
  	'id_article' => $id_article,
  	'title' => $title,
  	'id_user' => $id_user,
- 	'id_category' => $id_category_new,
- 	'categories' => $categories,
- 	'content' => $content,
+ 	'name' => $name,
  	'names' => $names,
+ 	'id_category' => $id_category,
+ 	'title_category' => $title_category,
+ 	'categories' => $categories,
+ 	'content' => $content, 	
  	'images' => $images,
- 	'img' => $img_new,
+ 	'img' => $img,
  	'msg' => $msg
  ]);
 	 $title = 'РЕДАКТИРОВАНИЕ';
