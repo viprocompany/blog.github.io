@@ -1,5 +1,4 @@
-<?
-php if($isAuth) { ?>
+<?php if($isAuth) { ?>
 	<h3>ДОБАВИТЬ АВТОРА</h3>
 	<hr>
 	<form method="post">

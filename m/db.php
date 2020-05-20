@@ -107,23 +107,34 @@ function correct_id($text, $table, $param, $id ){
 		$query = db_query("SELECT $parametrs  FROM $table  $other ;");
 		return $query;
 	}
+
 	 //выбираем массив имён=значений статических текстов для добавления в разметку
-	function textsStatic($id,$text)
+	function textsStatic()
 	{				
 		$query = select_table(' id_text, text_content ', ' texts '); 
 		$texts[] ='';
 		$texts = $query-> fetchAll();
-	foreach ($texts as list($a, $b)) 
-		{
-		
-		// echo $a . "<br>";
-		// echo $b . "<br>";
-		$id = substr($a,1) ;
-		$text = $b;
-		$texts = ('\'' . "$id" . '\'' . '=> ' . '\'' .$text .'\'' . ',');
-	 print($texts);
-		}
-	 
-	  return ;
+			foreach ($texts as $text)
+		{				
+			$i = $text['id_text'] ;			
+			$i = substr($i,1);
+			$t = $text['text_content'];
+			$texts = array ($i => $t);
+			return $texts  ;
+		}	 	 
+	  // return $texts  ;
 	}
+// 	foreach ($texts as list($a, $b)) 
+// 		{// echo $a . "<br>";
+// 		// echo $b . "<br>";
+// 		$id = substr($a,1) ;
+// 		$text = $b;
+// 				// $texts = ('\'' . "$id" . '\'' . '=> ' . '\'' . $text .'\'' . ',');		
+// 		$texts = serialize('\'' . "$id" . '\'' . '=> ' . '\'' . $text .'\'' . ',');
+// 	 // print($texts);
+// 		}	 
+		//формирует красивую строку по шаблону $texts, но в темплайте как $text она не выводится, при вставлении вручную все работает отлично:
+	// 'image_footer'=> 'footer.jpg','image_header'=> 'header.jpg','image_mail'=> 'mail.png','instagram'=> 'instagram.jpg','title_1'=> 'PHP','title_2'=> 'Первый уровень PHP','vk'=> 'vk.jpg',
+
 	
+  

@@ -26,7 +26,7 @@ if(isset($id_text ) && correct_id('text_content', 'texts', 'id_text', $id_text )
   $text_content = $text['text_content'];
   // $img_content = $text['img_content'];
   $description = $text['description'];
-  {         //проверяем корректность вводимого айдишника
+  { //проверяем корректность вводимого айдишника
     // if(!correct_id('name', 'users', 'id_user', $id_user ))
     // {   
     //   $msg = errors();
@@ -36,13 +36,7 @@ if(isset($id_text ) && correct_id('text_content', 'texts', 'id_text', $id_text )
     {   
       $msg = errors();
     } 
-    // include('v/v_users_new.php');
-    //при добавлении нового автора будет создаваться переменная шаблона для вывода данных о новом авторе , которая далее будет добавлена в массив переменных шаблона v_main
-      //   $inner_users_new = template('v_users_new',  [
-      //   'id_user' => $id_user,
-      //   'name' => $name
-      // ]);     
-   }
+    }
   }
   //создаем массив сканирую директорию img
 // $dir_img = $_SERVER['DOCUMENT_ROOT'] . 'assest/img';
@@ -52,23 +46,17 @@ $img_files = scandir($dir_img);
 //создаем пустой массив для картинок
 $images = [];
 $images = $img_files;
-
 //создаем соеденение с базой, делаем запрос на выбор статьи по пререданному с индексной строки айдишнику, попутно в этой же функции проверяем коррктность тела запроса    
   $query = select_table(' * ', ' texts ', " ORDER BY id_text ASC ");  
 //задаем переменную для названия  
   $texts= $query->fetchAll();
-
   // //создаем переменные в виде шаблонов из кода разметки и прередаем в выбранные вьюшки значения  isAuth,login,msg,users из  файла users.php : 1. v_auth  для вывода представления авторизации и 2. v_users для вывода общего списка авторов
         $inner = template('v_texts',  [
-        'isAuth' => $isAuth,
-        // 'id_text' => $id_text,
-        // 'text_content' => $text_content,
-        // 'description' => $description,
+        'isAuth' => $isAuth,  
         'texts' => $texts,
         'images' => $images
       ]);
-        $title = 'ТЕКСТЫ';
- 
+        $title = 'СТАТИЧЕСКИЕ ТЕКСТЫ'; 
 ?>
   
   
