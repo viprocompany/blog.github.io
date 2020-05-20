@@ -71,7 +71,8 @@ else{
 
 //создаем массив сканирую директорию img
 // $dir_img = $_SERVER['DOCUMENT_ROOT'] . 'assest/img';
-$dir_img =  'D:/open-server/OSPanel/domains/blog/assest/img';
+// $dir_img =  'f:/OpenServer/OSPanel/domains/blog/images';
+$dir_img =  'D:/open-server/OSPanel/domains/blog/images';
 $img_files = scandir($dir_img);
 //создаем пустой массив для картинок
 $images = [];

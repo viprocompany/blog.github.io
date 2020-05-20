@@ -1,6 +1,7 @@
 <?php  
 //объявляем константу для переменной корня сайта для подстановки на ссылках сайта после перехода на человекочитаемые урлы
 define('ROOT','/');
+// define('ROOT','http://blog/');
 include_once('m/auth.php');
 include_once('m/validate.php');
 include_once('m/db.php');
@@ -14,12 +15,14 @@ include_once('m/system.php');
 	// Если после слеша ничего нет ,то этот параметр будет удален из массива $_GET. Это делается для того чтобы независимо от того есть в конце адреса слеш или нет он будет  считаться одним и тем же адресом.
 	if($params[$end] === ''){
 		unset($params[$end]);
-//соответственно уменьшаем номер последнего элеиента массива
+//соответственно уменьшаем номер последнего элемента массива
 		$end--;
 	}
 
 session_start();
-	
+
+$texts = textsStatic('id' , $text);
+// echo($texts);
 	// var_dump($params);
 // echo $params[1];
 
@@ -64,8 +67,10 @@ echo template('v_main', [
 	'content'=> $inner,
 	'auth'=> $inner_auth,
 	'new_row'=> $new_row,
-	'error'=> $error
-
+	// substr($texts, 0, -1),
+	'error'=> $error,
+	$texts
+	// 'image_footer'=> 'footer.jpg','image_header'=> 'header.jpg','image_mail'=> 'mail.png','instagram'=> 'instagram.jpg','title_1'=> 'PHP','title_2'=> 'Первый уровень PHP','vk'=> 'vk.jpg'
 ]);
 
 ?>

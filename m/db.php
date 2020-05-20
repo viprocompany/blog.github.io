@@ -55,7 +55,7 @@ function correct_id($text, $table, $param, $id ){
 //если переданного айдишника нет, значит нет и категории(пустая),  значит пишем ошибку
 	if($cat == "")
 	{
-		errors('Нерный код, введите корректный числовой код !');
+		errors('Неверный выбор, введите корректный параметр !');
 		return false;
 	}
 	return true;
@@ -107,3 +107,23 @@ function correct_id($text, $table, $param, $id ){
 		$query = db_query("SELECT $parametrs  FROM $table  $other ;");
 		return $query;
 	}
+	 //выбираем массив имён=значений статических текстов для добавления в разметку
+	function textsStatic($id,$text)
+	{				
+		$query = select_table(' id_text, text_content ', ' texts '); 
+		$texts[] ='';
+		$texts = $query-> fetchAll();
+	foreach ($texts as list($a, $b)) 
+		{
+		
+		// echo $a . "<br>";
+		// echo $b . "<br>";
+		$id = substr($a,1) ;
+		$text = $b;
+		$texts = ('\'' . "$id" . '\'' . '=> ' . '\'' .$text .'\'' . ',');
+	 print($texts);
+		}
+	 
+	  return ;
+	}
+	

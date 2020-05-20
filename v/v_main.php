@@ -24,6 +24,7 @@
 		<!--описание-->
 		<div class="row border border rounded" id="legend">
 			<div class="col-12">
+				<?php echo $title_1; ?>
 			<?php echo $new_row; ?>
 			</div>
 		</div>
@@ -46,15 +47,7 @@
 				<!--КОНТЕНТ левая часть глючат скобки-->
 				<div class="col-6 col-md-2 order-md-1 border border-warning  rounded " id="sideLeft">
 					<div class="col-12">
-							<!-- после подключения правил перезаписи в файле .htaccess делаем урлы человекочитаемыми   выбрасывая из ссылки подставляемый ранее index.php?c= , так как теперь в индексном файле страницы при получении из строки(массив гет) значение элемента home , будет происходить соответственно вызов контролера home 
-								<?php echo ROOT?> используем для указания корня сайта , задаем с индексной страницы-->
-						<p><a class="btn btn-outline-primary" href="<?php echo ROOT?>home">Главная</a></p>
-				<!-- 		<p><a class="btn btn-outline-primary" href="index.php?c=home">Главная</a></p> -->
-						<p><a class="btn btn-outline-primary" href="<?php echo ROOT?>users">Авторы  </a></p>
-						<!-- после подключения правил перезаписи в файле .htaccess делаем урлы человекочитаемыми   выбрасывая из ссылки подставляемый ранее index.php?c= , так как теперь в индексном файле страницы при получении из строки(массив гет) значение элемента users , будет происходить соответственно вызов контролера users -->
-									<!-- <p><a class="btn btn-outline-primary" href="index.php?c=users">Авторы  </a></p> -->
-						<p><a  class="btn btn-outline-primary" href="<?php echo ROOT?>categories">Категории</a></p>
-									<!-- <p><a  class="btn btn-outline-primary" href="index.php?c=categories">Категории</a></p> -->
+		
 						<div class="p-2 d-flex flex-column justify-content-center" id="info">   
 							<div class="" id="instagram"></div>
 							<div class="row" id="insta">
@@ -121,6 +114,8 @@
 			<!--ПОДВАЛ-->
 			<div class="row" id="footer">
 				<img src="<?php echo ROOT?>assest/img/footer.jpg" alt="" class="rounded img-fluid float-center">
+				<img src="<?php echo ROOT?>assest/img/<?php echo $image_footer;?>" alt="" class="rounded img-fluid float-center">
+			</div>
 			</div>
 			<!--БЛОК АВТОР-->
 			<div class="row " id="copyright"></div>

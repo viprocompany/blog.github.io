@@ -1,4 +1,5 @@
 <div><?php echo $msg?></div>
+<p><a class="btn btn-outline-secondary" href="<?php echo ROOT?>">Назад</a></p>
 <!-- выводим название статьи и текст статьи -->
 <h1><strong><?=$title?></strong></h1>	
 <span>Автор:</span><STRONG><?=$name?></STRONG>	  <br>
@@ -7,7 +8,7 @@
 <em><span>Рубрика:</span><?=$title_category?></em>	
 <br>
 <?php if(isset($img)){?>
-<img src="<?php echo ROOT?>assest/img/<?=$img?>"  class="rounded img-fluid float-center">
+<img src="<?php echo ROOT?>images/<?=$img?>"  class="rounded img-fluid float-center">
 <br>
 <?php }?>
 <?php if($isAuth){?>
